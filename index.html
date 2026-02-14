@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Me! 💌</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;400;600&display=swap');
+        
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+            font-family: 'Quicksand', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+        }
+        
+        /* Envelope Styles */
+        .envelope-wrapper {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.5s;
+        }
+        
+        .envelope-wrapper.open {
+            transform: scale(0.9);
+        }
+        
+        .envelope {
+            position: relative;
+            width: 350px;
+            height: 250px;
+            background-color: #f9e5d7;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            border-left: 175px solid transparent;
+            border-right: 175px solid transparent;
+            border-bottom: 120px solid #fad5b5;
+            border-radius: 20px 20px 0 0;
+            transform-origin: top;
+            transition: transform 0.8s ease-in-out;
+            z-index: 5;
+        }
+        
+        .envelope-flap.open {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+        
+        .envelope-body {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 180px;
+            background-color: #fce5cd;
+            border-radius: 0 0 20px 20px;
+            z-index: 2;
+        }
+        
+        .heart-seal {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 40px;
+            z-index: 6;
+            transition: opacity 0.5s;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .heart-seal.open {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .address {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: #b76e79;
+            font-weight: 600;
+            text-align: center;
+            z-index: 3;
+        }
+        
+        /* Card Styles */
+        .card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 280px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            z-index: 10;
+            opacity: 0;
+            transition: all 0.8s ease-in-out;
+            pointer-events: none;
+            border: 3px solid #ff4d6d;
+            text-align: center;
+        }
+        
+        .card.open {
+            opacity: 1;
+            transform: translate(-50%, -60%);
+            pointer-events: all;
+            transition-delay: 0.5s;
+        }
+        
+        .card h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5em;
+            color: #ff4d6d;
+            margin: 0;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(255,77,109,0.2);
+        }
+        
+        .card .subtitle {
+            font-size: 1.8em;
+            color: #ff8fa3;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+        
+        .heart-divider {
+            font-size: 30px;
+            margin: 15px 0;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        .message {
+            font-size: 1.1em;
+            color: #333;
+            margin: 20px 0;
+            line-height: 1.6;
+            padding: 0 10px;
+        }
+        
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2em;
+            color: #ff4d6d;
+            margin-top: 20px;
+        }
+        
+        .floating-hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .floating-hearts span {
+            position: absolute;
+            font-size: 20px;
+            animation: float 6s linear infinite;
+            opacity: 0.6;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        .instruction {
+            margin-top: 30px;
+            color: white;
+            font-size: 1.2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .photo-strip {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .photo-placeholder {
+            width: 60px;
+            height: 60px;
+            background: #ffe4e6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 2px solid #ff4d6d;
+        }
+        
+        .date {
+            color: #888;
+            font-size: 0.9em;
+            margin-top: 15px;
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff4d6d;
+            opacity: 0;
+            animation: confettiFall 3s ease-in-out;
+        }
+        
+        @keyframes confettiFall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts" id="hearts"></div>
+    <div class="confetti" id="confetti"></div>
+    
+    <div class="container">
+        <div class="envelope-wrapper" id="envelopeWrapper" onclick="openEnvelope()">
+            <!-- Envelope -->
+            <div class="envelope">
+                <div class="envelope-flap" id="envelopeFlap"></div>
+                <div class="envelope-body"></div>
+                <div class="heart-seal" id="heartSeal">❤️</div>
+                <div class="address">
+                    To: My Cutie Pie<br>
+                    💌 Open with love 💌
+                </div>
+            </div>
+            
+            <!-- Card that comes out -->
+            <div class="card" id="card">
+                <div class="heart-divider">💝 💖 💗</div>
+                <h1>Happy</h1>
+                <h1>Valentine's Day</h1>
+                <div class="subtitle">Cutie Pie!</div>
+                
+                <div class="photo-strip">
+                    <div class="photo-placeholder">🥰</div>
+                    <div class="photo-placeholder">💕</div>
+                    <div class="photo-placeholder">😘</div>
+                </div>
+                
+                <div class="message">
+                    Every moment with you is special.<br>
+                    You make my world brighter just by being in it.<br>
+                    I'm so lucky to have you!
+                </div>
+                
+                <div class="signature">
+                    Love always,<br>
+                    [Your Name] 💋
+                </div>
+                
+                <div class="date">
+                    February 14, 2024
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="instruction" id="instruction">💌 Click the envelope to open 💌</div>
+
+    <script>
+        let isOpen = false;
+        
+        function openEnvelope() {
+            if (!isOpen) {
+                // Get elements
+                const wrapper = document.getElementById('envelopeWrapper');
+                const flap = document.getElementById('envelopeFlap');
+                const seal = document.getElementById('heartSeal');
+                const card = document.getElementById('card');
+                const instruction = document.getElementById('instruction');
+                
+                // Open envelope
+                wrapper.classList.add('open');
+                flap.classList.add('open');
+                seal.classList.add('open');
+                
+                // Show card
+                setTimeout(() => {
+                    card.classList.add('open');
+                }, 300);
+                
+                // Change instruction
+                instruction.innerHTML = "💖 Awww, she's gonna love this! 💖";
+                
+                // Create confetti
+                createConfetti();
+                
+                // Create floating hearts
+                createFloatingHearts();
+                
+                isOpen = true;
+            }
+        }
+        
+        function createConfetti() {
+            const confettiContainer = document.getElementById('confetti');
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti-piece');
+                    
+                    // Random properties
+                    const colors = ['#ff4d6d', '#ff8fa3', '#ffb6c1', '#ffd1dc', '#ff69b4'];
+                    const left = Math.random() * 100;
+                    const size = Math.random() * 10 + 5;
+                    const duration = Math.random() * 2 + 2;
+                    
+                    confetti.style.left = left + '%';
+                    confetti.style.width = size + 'px';
+                    confetti.style.height = size + 'px';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animation = `confettiFall ${duration}s ease-in-out`;
+                    confetti.style.opacity = '1';
+                    
+                    confettiContainer.appendChild(confetti);
+                    
+                    // Remove after animation
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, duration * 1000);
+                }, i * 50);
+            }
+        }
+        
+        function createFloatingHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            heartsContainer.innerHTML = ''; // Clear existing hearts
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('span');
+                    heart.innerHTML = ['❤️', '💖', '💗', '💓', '💕', '💘', '💝'][Math.floor(Math.random() * 7)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDelay = Math.random() * 2 + 's';
+                    heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                    heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                    heartsContainer.appendChild(heart);
+                    
+                    // Remove after animation
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 8000);
+                }, i * 200);
+            }
+        }
+        
+        // Add romantic background music? (optional - user would need to interact first due to browser policies)
+        // Most browsers require user interaction before playing audio
+        
+        // Personalize the name
+        window.onload = function() {
+            const yourName = prompt("What's your name?", "Your Love");
+            if (yourName) {
+                document.querySelector('.signature').innerHTML = `Love always,<br>${yourName} 💋`;
+            }
+            
+            // Add a subtle hint to click
+            setTimeout(() => {
+                if (!isOpen) {
+                    const instruction = document.getElementById('instruction');
+                    instruction.style.animation = 'bounce 1s infinite';
+                }
+            }, 2000);
+        };
+        
+        // Add hover effect hint
+        const envelopeWrapper = document.getElementById('envelopeWrapper');
+        envelopeWrapper.addEventListener('mouseenter', () => {
+            if (!isOpen) {
+                envelopeWrapper.style.transform = 'scale(1.05)';
+            }
+        });
+        
+        envelopeWrapper.addEventListener('mouseleave', () => {
+            if (!isOpen) {
+                envelopeWrapper.style.transform = 'scale(1)';
+            }
+        });
+    </script>
+</body>
+</html>
